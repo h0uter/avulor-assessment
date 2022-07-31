@@ -1,8 +1,3 @@
-# processe registration -> registrationID
-
-# send waypoints
-
-
 from concurrent import futures
 import logging
 
@@ -25,12 +20,13 @@ class Greeter(drones_pb2_grpc.GreeterServicer):
 
     def send_position(self, request, context):
         print(
-            f"Received position: {request.latitude}, {request.longitude}, {request.altitude}")
+            f"Received position: {request.latitude}, {request.longitude}, {request.altitude}"
+        )
         return drones_pb2.Empty()
 
     def listen_waypoint(self, request, context):
         print("Listening for waypoints for drone")
-        waypoints = [(10,10), (20,20), (30,30)]
+        waypoints = [(10, 10), (20, 20), (30, 30)]
         for wp in waypoints:
             yield drones_pb2.Waypoint(latitude=wp[0], longitude=wp[1])
 
