@@ -18,8 +18,17 @@ def run():
     # of the code.
     with grpc.insecure_channel('localhost:50051') as channel:
         stub = drones_pb2_grpc.GreeterStub(channel)
-        response = stub.register(drones_pb2.Registration(name='Turbo Drone'))
-    print(f"Drones client received: {response.id}")
+        
+        MY_DRONE_NAME = "DJI Mavic 2 Pro"
+        response = stub.register(drones_pb2.Registration(name=MY_DRONE_NAME))
+
+        print(f"Drones client received id: {response.id}")
+
+        stub.send_position(drones_pb2.Position(latitude=100, longitude=150, altitude=10))
+
+        waypoints = stub.listen_waypoint(drones_pb2.Empty())
+        for wp in waypoints:
+            print(f"Received waypoint: {wp.latitude}, {wp.longitude}")
 
 if __name__ == '__main__':
     logging.basicConfig()
