@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+service Greeter {
+    rpc register (Registration) returns (RegistrationId) {}
+    rpc send_position(Position) returns (Empty) {}
+    rpc listen_waypoint(Empty) returns (stream Waypoint) {} // Notice the *stream*
+}
+
+message Empty {}
+
+message Registration {
+    string name = 1;
+}
+
+message RegistrationId {
+    int32 id = 1;
+}
+
+message Waypoint {
+    float latitude = 1;
+    float longitude = 2;
+}
+
+message Position {
+    float latitude = 1;
+    float longitude = 2;
+    float altitude = 3;
+}
