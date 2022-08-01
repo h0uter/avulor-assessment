@@ -7,10 +7,6 @@ mod tests {
     }
 }
 
-// pub mod hello { 
-//     tonic::include_proto!("hello"); 
-// }
-
-pub mod drones { 
-    tonic::include_proto!("drones"); 
+pub mod hello { 
+    tonic::include_proto!("hello"); 
 }

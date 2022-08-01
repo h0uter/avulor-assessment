@@ -15,17 +15,17 @@ class GreeterStub(object):
             channel: A grpc.Channel.
         """
         self.register = channel.unary_unary(
-                '/Greeter/register',
+                '/Drones.Greeter/register',
                 request_serializer=drones__pb2.Registration.SerializeToString,
                 response_deserializer=drones__pb2.RegistrationId.FromString,
                 )
         self.send_position = channel.unary_unary(
-                '/Greeter/send_position',
+                '/Drones.Greeter/send_position',
                 request_serializer=drones__pb2.Position.SerializeToString,
                 response_deserializer=drones__pb2.Empty.FromString,
                 )
         self.listen_waypoint = channel.unary_stream(
-                '/Greeter/listen_waypoint',
+                '/Drones.Greeter/listen_waypoint',
                 request_serializer=drones__pb2.Empty.SerializeToString,
                 response_deserializer=drones__pb2.Waypoint.FromString,
                 )
@@ -72,7 +72,7 @@ def add_GreeterServicer_to_server(servicer, server):
             ),
     }
     generic_handler = grpc.method_handlers_generic_handler(
-            'Greeter', rpc_method_handlers)
+            'Drones.Greeter', rpc_method_handlers)
     server.add_generic_rpc_handlers((generic_handler,))
 
 
@@ -91,7 +91,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Greeter/register',
+        return grpc.experimental.unary_unary(request, target, '/Drones.Greeter/register',
             drones__pb2.Registration.SerializeToString,
             drones__pb2.RegistrationId.FromString,
             options, channel_credentials,
@@ -108,7 +108,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_unary(request, target, '/Greeter/send_position',
+        return grpc.experimental.unary_unary(request, target, '/Drones.Greeter/send_position',
             drones__pb2.Position.SerializeToString,
             drones__pb2.Empty.FromString,
             options, channel_credentials,
@@ -125,7 +125,7 @@ class Greeter(object):
             wait_for_ready=None,
             timeout=None,
             metadata=None):
-        return grpc.experimental.unary_stream(request, target, '/Greeter/listen_waypoint',
+        return grpc.experimental.unary_stream(request, target, '/Drones.Greeter/listen_waypoint',
             drones__pb2.Empty.SerializeToString,
             drones__pb2.Waypoint.FromString,
             options, channel_credentials,
