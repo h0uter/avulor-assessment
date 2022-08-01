@@ -1,61 +1,44 @@
-from dataclasses import dataclass
-from typing import Optional
 import grpc
 import logging
+from my_drone import MyDrone
 
-import drones_pb2
-import drones_pb2_grpc
-import time
-
-
-@dataclass
-class Drone:
-    id: Optional[int]
-    name: str
-    latitude: float
-    longitude: float
-    altitude: float
-
-
-def send_position(stub: drones_pb2_grpc.GreeterStub, my_drone: Drone):
-    print("Sending updated position")
-    stub.send_position(
-        drones_pb2.Position(
-            latitude=my_drone.latitude,
-            longitude=my_drone.longitude,
-            altitude=my_drone.altitude,
-        )
-    )
+MY_DRONE_NAME = "DJI Mavic 2 Pro"
 
 
 def run():
-    # NOTE(gRPC Python Team): .close() is possible on a channel and should be
-    # used in circumstances in which the with statement does not fit the needs
-    # of the code.
-    MY_DRONE_NAME = "DJI Mavic 2 Pro"
-    my_drone = Drone(id=None, name=MY_DRONE_NAME, latitude=0, longitude=0, altitude=15)
-
     with grpc.insecure_channel("localhost:50051") as channel:
-        stub = drones_pb2_grpc.GreeterStub(channel)
+        print("---Client started---")
 
-        response = stub.register(drones_pb2.Registration(name=my_drone.name))
-        print(f"Drones client received id: {response.id}")
-        my_drone.id = response.id
+        my_drone = MyDrone(
+            server_id=None,
+            name=MY_DRONE_NAME,
+            channel=channel,
+            latitude=0,
+            longitude=0,
+            altitude=15,
+        )
 
-        send_position(stub, my_drone)
+        # register the drone to the server
+        my_drone.register()
 
-        print("Listening for waypoints")
-        for wp in stub.listen_waypoint(drones_pb2.Empty()):
-            print(f"Received waypoint, drone flying towards: {wp.latitude}, {wp.longitude}")
+        # send the drones position to the server
+        my_drone.send_position()
 
-            time.sleep(5)
+        print("-> Listening for waypoints")
+        waypoint_stream = my_drone.listen_waypoints()
+
+        for wp in waypoint_stream:
+            print(
+                f"{my_drone.name} received waypoint, flying towards: {wp.latitude}, {wp.longitude}"
+            )
+
             # move drone to position
-            my_drone.latitude = wp.latitude
-            my_drone.longitude = wp.longitude
+            my_drone.move_to(wp.latitude, wp.longitude)
 
-            send_position(stub, my_drone)
+            # send updated position
+            my_drone.send_position()
 
-        print("---Completed---")
+        print("---Mission completed---")
 
 
 if __name__ == "__main__":
