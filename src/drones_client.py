@@ -18,7 +18,7 @@ class Drone:
 
 
 def send_position(stub: drones_pb2_grpc.GreeterStub, my_drone: Drone):
-    print("Sending position")
+    print("Sending updated position")
     stub.send_position(
         drones_pb2.Position(
             latitude=my_drone.latitude,
@@ -46,15 +46,14 @@ def run():
 
         print("Listening for waypoints")
         for wp in stub.listen_waypoint(drones_pb2.Empty()):
-            print(f"Received waypoint: {wp.latitude}, {wp.longitude}")
+            print(f"Received waypoint, drone flying towards: {wp.latitude}, {wp.longitude}")
 
+            time.sleep(5)
             # move drone to position
             my_drone.latitude = wp.latitude
             my_drone.longitude = wp.longitude
 
             send_position(stub, my_drone)
-
-            time.sleep(5)
 
         print("---Completed---")
 
