@@ -36,6 +36,7 @@ def serve():
     drones_pb2_grpc.add_GreeterServicer_to_server(Greeter(), server)
     server.add_insecure_port("[::]:50051")
     server.start()
+    print("Server started")
     server.wait_for_termination()
 
 
