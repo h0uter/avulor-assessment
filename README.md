@@ -1,7 +1,5 @@
-# avulor1
+# Avulor Assessment
+Implement a drone swarm communications demo using GRPC.
 
-
-- [x] neem de examples en laat een barebones ding werken
-- [x] leer dat compilen
-- [x] vervang de proto met de avulor proto
-- [ ] laat die drone client zichzelf registreren.
+- Python client and server
+- Rust client

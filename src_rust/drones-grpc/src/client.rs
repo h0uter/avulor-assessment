@@ -48,6 +48,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let listen_request = Request::new(drones::Empty {});
     let mut stream = client.listen_waypoint(listen_request).await?.into_inner();
 
+    // foreach waypoint send received fly to it and send position to server.
     while let Some(waypoint) = stream.message().await? {
         println!("waypoint: {:?}", waypoint);
 
