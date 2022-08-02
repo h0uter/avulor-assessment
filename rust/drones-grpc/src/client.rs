@@ -7,6 +7,7 @@ use drones_grpc::drones;
 
 use std::{thread, time::Duration};
 
+
 struct MyDrone {
     id: i32,
     name: String,
@@ -17,9 +18,12 @@ struct MyDrone {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+    
+    let drone_name: String = "My Super Cool Rust Drone".to_string();
+
     let mut my_drone = MyDrone {
         id: 0,
-        name: "My Super Cool Drone".to_string(),
+        name: drone_name,
         lattitude: 0.0,
         longitude: 0.0,
         altitude: 5.0,
